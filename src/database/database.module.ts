@@ -12,7 +12,7 @@ export const dataSourceOptions: DataSourceOptions = {
     password: "password", 
     database: "devtraining",
     entities: [Course, Tag],
-    synchronize: true // A partir do momento que se define uma entidade com os decorators do TypeORM ele identifica e cria uma tabela com nome da entidade com os campos presentes
+    synchronize: false // A partir do momento que se define uma entidade com os decorators do TypeORM ele identifica e cria uma tabela com nome da entidade com os campos presentes
 }
 
 @Module({

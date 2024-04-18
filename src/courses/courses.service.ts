@@ -16,11 +16,11 @@ export class CoursesService {
     ) {}
 
     async findAll() {
-        return this.courseRepository.find()
+        return this.courseRepository.find({relations: ["tags"]}) // Nome da relação que quer trazer junto com os dados
     }
 
-    async findOne(id: number) {
-        const course = await this.courseRepository.findOne({where: {id}})
+    async findOne(id: string) {
+        const course = await this.courseRepository.findOne({where: {id}, relations: ["tags"]})
         if (!course) {
             throw new HttpException(`Course ID ${id} not found`, HttpStatus.NOT_FOUND)
         }
@@ -38,7 +38,7 @@ export class CoursesService {
         return this.courseRepository.save(course)
     }
 
-    async update(id: number, updateCourseDTO: UpdateCourseDTO) {
+    async update(id: string, updateCourseDTO: UpdateCourseDTO) {
         const tags = updateCourseDTO.tags &&  await Promise.all(
             updateCourseDTO.tags.map(name => this.preloadTagByName(name))
         )
@@ -53,7 +53,7 @@ export class CoursesService {
         return this.courseRepository.save(course)
     }
 
-    async remove(id: number) {
+    async remove(id: string) {
         const course = await this.courseRepository.findOne({where: {id}})
         if (!course) {
             throw new HttpException(`Course ID ${id} not found`, HttpStatus.NOT_FOUND)
@@ -65,6 +65,5 @@ export class CoursesService {
         const tag = await this.tagRepository.findOne({where: {name}})
         if (tag) {return tag;}
         return this.tagRepository.create({name})
-
     }
 }
